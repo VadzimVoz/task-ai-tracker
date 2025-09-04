@@ -3,6 +3,8 @@
 import { useEffect } from 'react';
 import TaskForm from './TaskForm';
 import { useTaskStore } from '../store/taskStore';
+import "../styles/tasks.css";
+import "../styles/states.css";
 
 export default function TodayTasks() {
   const { 
