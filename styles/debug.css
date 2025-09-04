@@ -1,0 +1,59 @@
+/* === Границы компонентов === */
+.debug-outline * {
+  outline: 1px solid rgba(255, 0, 0, 0.3);
+}
+
+/* === Фоновые цвета для отладки блоков === */
+.debug-bg div,
+.debug-bg section,
+.debug-bg article,
+.debug-bg aside {
+  background-color: rgba(0, 255, 255, 0.05);
+}
+
+/* === Отображение размеров и позиций === */
+.debug-box {
+  position: relative;
+}
+
+.debug-box::after {
+  content: attr(class);
+  position: absolute;
+  top: 0;
+  left: 0;
+  font-size: 10px;
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  padding: 2px 4px;
+  border-radius: 2px;
+  z-index: 1000;
+  pointer-events: none;
+}
+
+/* === Отладка flex и grid === */
+.debug-flex > * {
+  border: 1px dashed #3b82f6;
+}
+
+.debug-grid > * {
+  border: 1px dashed #10b981;
+}
+
+/* === Z-index визуализация === */
+.debug-z {
+  position: relative;
+}
+
+.debug-z::before {
+  content: 'z-index: ' attr(data-z);
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  font-size: 10px;
+  background: rgba(255, 165, 0, 0.8);
+  color: #fff;
+  padding: 2px 4px;
+  border-radius: 2px;
+  z-index: 9999;
+  pointer-events: none;
+}

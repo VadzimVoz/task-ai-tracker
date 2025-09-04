@@ -1,0 +1,62 @@
+.reminder-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px 16px;
+  background-color: #fefefe;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  transition: background-color 0.2s;
+}
+
+.reminder-item:hover {
+  background-color: #f9fafb;
+}
+
+.reminder-title {
+  font-size: 16px;
+  font-weight: 500;
+  color: #1f2937;
+}
+
+.reminder-description {
+  font-size: 14px;
+  color: #4b5563;
+  line-height: 1.4;
+}
+
+.reminder-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.reminder-date {
+  white-space: nowrap;
+}
+
+.reminder-priority {
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: 500;
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+.reminder-priority.low {
+  background-color: #e0f2fe;
+  color: #0284c7;
+}
+
+.reminder-priority.medium {
+  background-color: #fef9c3;
+  color: #ca8a04;
+}
+
+.reminder-priority.high {
+  background-color: #fee2e2;
+  color: #b91c1c;
+}
