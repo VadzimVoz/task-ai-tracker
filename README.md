@@ -55,15 +55,17 @@
 
 ### 📦 Установка
 
-```bash
+
 git clone https://github.com/VadzimVoz/task-ai-tracker.git
 cd task-ai-tracker
 npm install
 
-🔐 Настройка Prisma
+# 🔐 Настройка Prisma
+
 Установи Prisma CLI:
 
-bash
+
+
 npm install prisma @prisma/client
 Создай файл .env в корне проекта:
 
@@ -186,11 +188,11 @@ git push origin feature/amazing-feature
 Проект лицензирован под MIT License
 
 👨‍💻 Автор
-Вадим Вазняк 📧 vadimvoznyak5965@gmail.com 🔗 GitHub @VadzimVoz
+Вадим Вазняк 📧 vadimvoznyak5965@gmail.com 🔗 GitHub: @VadzimVoz
 
 🙏 Благодарности
 Команда Next.js — за мощный фреймворк
 
 Сообщество React — за вдохновение
 
-AI-ассистент — за помощь в архитектуре и разраб
+AI-ассистент — за помощь в архитектуре и разработке
