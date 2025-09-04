@@ -1,18 +1,24 @@
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient } from '@prisma/client';
 
-const globalForPrisma = globalThis as unknown as {
-  prisma: PrismaClient | undefined
+declare global {
+  // Глобальное расширение для dev-среды
+  var prisma: PrismaClient | undefined;
 }
 
-export const prisma = globalForPrisma.prisma ?? new PrismaClient({
-  log: ['query', 'error', 'warn'],
-})
+// Создание клиента с логами
+export const prisma =
+  global.prisma ??
+  new PrismaClient({
+    log: ['query', 'error', 'warn'],
+  });
 
-// Проверка подключения при инициализации
-prisma.$connect()
-  .then(() => console.log('✅ Connected to database'))
-  .catch((error) => console.error('❌ Database connection error:', error))
-
+// Подключение к базе (однократно)
 if (process.env.NODE_ENV !== 'production') {
-  globalForPrisma.prisma = prisma
+  global.prisma = prisma;
 }
+
+// Проверка подключения
+prisma
+  .$connect()
+  .then(() => console.log('✅ Connected to database'))
+  .catch((error) => console.error('❌ Database connection error:', error));
