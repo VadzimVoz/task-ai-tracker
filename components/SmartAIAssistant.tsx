@@ -4,6 +4,9 @@
 import { useState, useEffect } from 'react';
 import { PseudoAIService } from '../lib/pseudoAI';
 import { useTaskStore } from '../store/taskStore';
+import '../styles/layout.css';
+import '../styles/typography.css';
+
 
 export default function SmartAIAssistant() {
   const [suggestions, setSuggestions] = useState<{ text: string; confidence: number; context: string }[]>([]);
