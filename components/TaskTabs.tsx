@@ -1,4 +1,3 @@
-// components/TaskTabs.tsx
 'use client';
 
 import { useState } from 'react';
@@ -6,54 +5,52 @@ import TodayTasks from './TodayTasks';
 import Reminders from './Reminders';
 import SmartAIAssistant from './SmartAIAssistant';
 
+import '../styles/layout.css';
+import '../styles/typography.css';
+import '../styles/states.css';
+import '../styles/tasks.css';
+import '../styles/reminders.css';
+
+type TabType = 'today' | 'reminders';
+
 export default function TaskTabs() {
-  const [activeTab, setActiveTab] = useState<'today' | 'reminders'>('today');
+  const [activeTab, setActiveTab] = useState<TabType>('today');
+
+  const renderTabContent = () => {
+    switch (activeTab) {
+      case 'today':
+        return <TodayTasks />;
+      case 'reminders':
+        return <Reminders />;
+      default:
+        return null;
+    }
+  };
 
   return (
-    <div>
-      <div style={{ 
-        display: 'flex', 
-        gap: '8px', 
-        marginBottom: '20px',
-        background: '#f5f5f5',
-        padding: '8px',
-        borderRadius: '12px'
-      }}>
+    <section className="task-tabs" data-testid="task-tabs">
+      <div className="tab-buttons">
         <button
+          className={`tab-button ${activeTab === 'today' ? 'active' : ''}`}
           onClick={() => setActiveTab('today')}
-          style={{
-            padding: '10px 20px',
-            background: activeTab === 'today' ? '#0070f3' : 'transparent',
-            color: activeTab === 'today' ? 'white' : '#666',
-            border: 'none',
-            borderRadius: '8px',
-            cursor: 'pointer',
-            transition: 'all 0.2s'
-          }}
+          data-testid="tab-today"
         >
           📝 На сегодня
         </button>
         <button
+          className={`tab-button ${activeTab === 'reminders' ? 'active' : ''}`}
           onClick={() => setActiveTab('reminders')}
-          style={{
-            padding: '10px 20px',
-            background: activeTab === 'reminders' ? '#0070f3' : 'transparent',
-            color: activeTab === 'reminders' ? 'white' : '#666',
-            border: 'none',
-            borderRadius: '8px',
-            cursor: 'pointer',
-            transition: 'all 0.2s'
-          }}
+          data-testid="tab-reminders"
         >
           ⏰ Напоминания
         </button>
       </div>
 
-      {/* Умный AI-помощник */}
       <SmartAIAssistant />
 
-      {/* Контент табов */}
-      {activeTab === 'today' ? <TodayTasks /> : <Reminders />}
-    </div>
+      <div className="tab-content" data-testid="tab-content">
+        {renderTabContent()}
+      </div>
+    </section>
   );
 }

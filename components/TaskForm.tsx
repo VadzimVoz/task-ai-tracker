@@ -1,5 +1,10 @@
-'use client';
 
+
+
+'use client';
+import '../styles/tasks.css';
+import '../styles/datepicker.css';
+import '../styles/states.css';
 import { FormEvent, useState } from 'react';
 
 type TaskFormProps = {

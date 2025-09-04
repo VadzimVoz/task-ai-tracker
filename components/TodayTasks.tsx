@@ -3,17 +3,19 @@
 import { useEffect } from 'react';
 import TaskForm from './TaskForm';
 import { useTaskStore } from '../store/taskStore';
+import '../styles/tasks.css';
+import '../styles/states.css';
 
 export default function TodayTasks() {
-  const { 
-    tasks, 
-    loading, 
-    error, 
-    fetchTasks, 
-    addTask, 
-    updateTask, 
-    deleteTask, 
-    clearError 
+  const {
+    tasks,
+    loading,
+    error,
+    fetchTasks,
+    addTask,
+    updateTask,
+    deleteTask,
+    clearError,
   } = useTaskStore();
 
   useEffect(() => {
@@ -26,7 +28,7 @@ export default function TodayTasks() {
         text,
         type: 'today',
         completed: false,
-        dueDate: null
+        dueDate: null,
       });
     } catch (error) {
       // Ошибка уже обработана в хранилище
@@ -49,81 +51,72 @@ export default function TodayTasks() {
     }
   };
 
-  const todayTasks = tasks.filter(task => task.type === 'today');
-
-  if (loading && tasks.length === 0) {
-    return (
-      <div>
-        <h2>Задачи на сегодня</h2>
-        <div>Загрузка задач...</div>
-      </div>
-    );
-  }
+  const todayTasks = tasks.filter((task) => task.type === 'today');
 
   return (
-    <div>
-      <h2>Задачи на сегодня</h2>
-      
+    <section>
+      <h2 className="section-title">Задачи на сегодня</h2>
+
       {error && (
-        <div>
+        <div className="error-banner">
           <span>{error}</span>
-          <button onClick={clearError} title="Закрыть">
+          <button onClick={clearError} title="Закрыть" className="error-close">
             ×
           </button>
         </div>
       )}
 
-      <TaskForm 
-        onSubmit={handleAddTask} 
+      <TaskForm
+        onSubmit={handleAddTask}
         placeholder="Добавить задачу..."
         disabled={loading}
       />
-      
-      <div>
-        <h3>Мои задачи:</h3>
-        
-        {todayTasks.length === 0 ? (
-          <div>
-            <p>✅ Нет задач на сегодня</p>
-            <p>Добавьте первую задачу выше</p>
-          </div>
-        ) : (
-          <ul>
-            {todayTasks.map(task => (
-              <li key={task.id}>
-                <div>
-                  <div>
-                    <input
-                      type="checkbox"
-                      checked={task.completed}
-                      onChange={() => handleToggleTask(task.id, task.completed)}
-                      disabled={loading}
-                    />
-                    <span className={task.completed ? 'completed' : ''}>
-                      {task.text}
-                    </span>
-                    <button
-                      onClick={() => handleDeleteTask(task.id)}
-                      disabled={loading}
-                      title="Удалить задачу"
-                    >
-                      🗑️
-                    </button>
-                  </div>
-                  
-                  {task.createdAt && (
-                    <div>
-                      <span>
-                        📅 {new Date(task.createdAt).toLocaleDateString('ru-RU')}
-                      </span>
-                    </div>
-                  )}
-                </div>
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
-    </div>
+
+      {loading && tasks.length === 0 ? (
+        <div className="task-empty">Загрузка задач...</div>
+      ) : todayTasks.length === 0 ? (
+        <div className="task-empty">
+          <p>✅ Нет задач на сегодня</p>
+          <p>Добавьте первую задачу выше</p>
+        </div>
+      ) : (
+        <ul className="task-list">
+          {todayTasks.map((task) => (
+            <li
+              key={task.id}
+              className={`task-item ${task.completed ? 'completed' : ''}`}
+            >
+              <div className="task-content">
+                <input
+                  type="checkbox"
+                  className="task-checkbox"
+                  checked={task.completed}
+                  onChange={() => handleToggleTask(task.id, task.completed)}
+                  disabled={loading}
+                />
+                <span
+                  className={`task-text ${task.completed ? 'completed' : ''}`}
+                >
+                  {task.text}
+                </span>
+              </div>
+
+              <div className="task-date">
+                📅 {new Date(task.createdAt).toLocaleDateString('ru-RU')}
+              </div>
+
+              <button
+                onClick={() => handleDeleteTask(task.id)}
+                disabled={loading}
+                title="Удалить задачу"
+                className="task-delete"
+              >
+                🗑️
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+    </section>
   );
 }

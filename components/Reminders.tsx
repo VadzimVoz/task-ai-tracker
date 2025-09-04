@@ -5,19 +5,22 @@ import TaskForm from './TaskForm';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { useTaskStore } from '../store/taskStore';
+import '../styles/reminders.css';
+import '../styles/datepicker.css';
+import '../styles/states.css';
 
 export default function Reminders() {
-  const { 
-    tasks, 
-    loading, 
-    error, 
-    fetchTasks, 
-    addTask, 
-    updateTask, 
-    deleteTask, 
-    clearError 
+  const {
+    tasks,
+    loading,
+    error,
+    fetchTasks,
+    addTask,
+    updateTask,
+    deleteTask,
+    clearError
   } = useTaskStore();
-  
+
   const [dueDate, setDueDate] = useState<Date | null>(new Date());
 
   useEffect(() => {
@@ -29,7 +32,7 @@ export default function Reminders() {
       clearError();
       return;
     }
-    
+
     try {
       await addTask({
         text,
@@ -38,54 +41,40 @@ export default function Reminders() {
         dueDate: dueDate.toISOString()
       });
       setDueDate(new Date());
-    } catch (error) {
-      // Ошибка уже обработана в хранилище
-    }
+    } catch {}
   };
 
   const handleToggleReminder = async (id: string, completed: boolean) => {
     try {
       await updateTask(id, { completed: !completed });
-    } catch (error) {
-      // Ошибка уже обработана в хранилище
-    }
+    } catch {}
   };
 
   const handleDeleteReminder = async (id: string) => {
     try {
       await deleteTask(id);
-    } catch (error) {
-      // Ошибка уже обработана в хранилище
-    }
+    } catch {}
   };
 
   const reminders = tasks.filter(task => task.type === 'reminder');
 
-  if (loading && tasks.length === 0) {
-    return (
-      <div>
-        <h2>Напоминания</h2>
-        <div>Загрузка напоминаний...</div>
-      </div>
-    );
-  }
-
   return (
-    <div>
-      <h2>Напоминания</h2>
-      
+    <div className="reminders-wrapper space-y-6">
+      <h2 className="reminders-title text-xl font-semibold">Напоминания</h2>
+
       {error && (
-        <div>
+        <div className="reminders-error state-error flex justify-between items-center">
           <span>{error}</span>
-          <button onClick={clearError} title="Закрыть">
-            ×
-          </button>
+          <button onClick={clearError} title="Закрыть">×</button>
         </div>
       )}
-      
-      <div>
-        <label>Дата и время напоминания:</label>
+
+      <div className="reminders-datepicker space-y-2">
+        <label htmlFor="reminder-date" className="block text-sm font-medium text-gray-700">
+          Дата и время напоминания:
+        </label>
         <DatePicker
+          id="reminder-date"
           selected={dueDate}
           onChange={setDueDate}
           showTimeSelect
@@ -94,52 +83,55 @@ export default function Reminders() {
           dateFormat="dd.MM.yyyy HH:mm"
           minDate={new Date()}
           placeholderText="Выберите дату и время"
+          className="datepicker-input"
         />
       </div>
 
-      <TaskForm 
-        onSubmit={handleAddReminder} 
+      <TaskForm
+        onSubmit={handleAddReminder}
         placeholder="Текст напоминания..."
         disabled={loading}
       />
-      
-      <div>
-        <h3>Мои напоминания:</h3>
-        
+
+      <div className="reminders-list space-y-4">
+        <h3 className="text-lg font-medium">Мои напоминания:</h3>
+
         {reminders.length === 0 ? (
-          <div>
+          <div className="reminders-empty state-empty">
             <p>⏰ Нет напоминаний</p>
             <p>Добавьте первое напоминание выше</p>
           </div>
         ) : (
-          <ul>
+          <ul className="reminders-ul space-y-3">
             {reminders.map(reminder => (
-              <li key={reminder.id}>
-                <div>
-                  <div>
+              <li key={reminder.id} className={`reminder-item ${reminder.completed ? 'completed' : ''}`}>
+                <div className="reminder-main space-y-2">
+                  <div className="reminder-top flex items-center gap-3">
                     <input
                       type="checkbox"
                       checked={reminder.completed}
                       onChange={() => handleToggleReminder(reminder.id, reminder.completed)}
                       disabled={loading}
+                      className="reminder-checkbox w-5 h-5"
                     />
-                    <span className={reminder.completed ? 'completed' : ''}>
+                    <span className={`reminder-text ${reminder.completed ? 'line-through text-gray-400' : 'text-gray-800'}`}>
                       {reminder.text}
                     </span>
                     <button
                       onClick={() => handleDeleteReminder(reminder.id)}
                       disabled={loading}
                       title="Удалить напоминание"
+                      className="reminder-delete text-red-500 hover:text-red-700"
                     >
                       🗑️
                     </button>
                   </div>
-                  
-                  <div>
-                    <span>
+
+                  <div className="reminder-meta flex gap-4 text-sm text-gray-500">
+                    <span className="reminder-date">
                       📅 {reminder.dueDate ? new Date(reminder.dueDate).toLocaleDateString('ru-RU') : 'Нет даты'}
                     </span>
-                    <span>
+                    <span className="reminder-time">
                       ⏰ {reminder.dueDate ? new Date(reminder.dueDate).toLocaleTimeString('ru-RU', {
                         hour: '2-digit',
                         minute: '2-digit'

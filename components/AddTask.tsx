@@ -1,19 +1,18 @@
 'use client';
 
 import { useState } from 'react';
-import { Task } from '../types/task';
 
 type AddTaskProps = {
-  onAdd: (taskText: string) => void;
-  taskType: 'today' | 'reminder';
+  onAdd: (text: string) => void;
 };
 
-export default function AddTask({ onAdd, taskType }: AddTaskProps) {
+export default function AddTask({ onAdd }: AddTaskProps) {
   const [text, setText] = useState('');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onAdd(text);
+    if (!text.trim()) return;
+    onAdd(text.trim());
     setText('');
   };
 
@@ -23,14 +22,14 @@ export default function AddTask({ onAdd, taskType }: AddTaskProps) {
         type="text"
         value={text}
         onChange={(e) => setText(e.target.value)}
-        placeholder={`Добавить ${taskType === 'reminder' ? 'напоминание' : 'задачу'}...`}
+        placeholder="Новая задача..."
         className="flex-1 p-2 border rounded"
       />
       <button
         type="submit"
-        className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+        className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
       >
-        Добавить
+        +
       </button>
     </form>
   );

@@ -1,4 +1,6 @@
 'use client';
+import '@/styles/tasks.css';
+import '@/styles/states.css';
 
 import { Task } from '../types/task';
 
