@@ -93,3 +93,9 @@
   background-color: #9ca3af;
   cursor: not-allowed;
 }
+.task-form-wrapper {
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: flex-start;
+}
+

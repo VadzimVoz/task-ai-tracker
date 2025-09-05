@@ -8,14 +8,18 @@ type TaskFormProps = {
   disabled?: boolean;
 };
 
-export default function TaskForm({ onSubmit, placeholder, disabled = false }: TaskFormProps) {
+export default function TaskForm({
+  onSubmit,
+  placeholder,
+  disabled = false,
+}: TaskFormProps) {
   const [text, setText] = useState('');
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    if (disabled) return;
-    
-    onSubmit(text);
+    if (disabled || !text.trim()) return;
+
+    onSubmit(text.trim());
     setText('');
   };
 
@@ -29,8 +33,8 @@ export default function TaskForm({ onSubmit, placeholder, disabled = false }: Ta
         className="task-input"
         disabled={disabled}
       />
-      <button 
-        type="submit" 
+      <button
+        type="submit"
         className="add-button"
         disabled={disabled || !text.trim()}
       >

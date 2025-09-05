@@ -7,15 +7,15 @@ import "../styles/tasks.css";
 import "../styles/states.css";
 
 export default function TodayTasks() {
-  const { 
-    tasks, 
-    loading, 
-    error, 
-    fetchTasks, 
-    addTask, 
-    updateTask, 
-    deleteTask, 
-    clearError 
+  const {
+    tasks,
+    loading,
+    error,
+    fetchTasks,
+    addTask,
+    updateTask,
+    deleteTask,
+    clearError
   } = useTaskStore();
 
   useEffect(() => {
@@ -53,21 +53,18 @@ export default function TodayTasks() {
 
   const todayTasks = tasks.filter(task => task.type === 'today');
 
-  if (loading && tasks.length === 0) {
-    return (
-      <div>
-        <h2>Задачи на сегодня</h2>
-        <div>Загрузка задач...</div>
-      </div>
-    );
-  }
-
   return (
     <div>
       <h2>Задачи на сегодня</h2>
-      
+
+      {loading && tasks.length === 0 && (
+        <div className="task-loading">
+          <p>Загрузка задач...</p>
+        </div>
+      )}
+
       {error && (
-        <div>
+        <div className="task-error">
           <span>{error}</span>
           <button onClick={clearError} title="Закрыть">
             ×
@@ -75,52 +72,51 @@ export default function TodayTasks() {
         </div>
       )}
 
-      <TaskForm 
-        onSubmit={handleAddTask} 
-        placeholder="Добавить задачу..."
-        disabled={loading}
-      />
-      
+      <TaskForm
+  onSubmit={handleAddTask}
+  placeholder="Добавить задачу..."
+  disabled={loading}
+/>
+
+
       <div>
         <h3>Мои задачи:</h3>
-        
+
         {todayTasks.length === 0 ? (
-          <div>
+          <div className="task-empty">
             <p>✅ Нет задач на сегодня</p>
             <p>Добавьте первую задачу выше</p>
           </div>
         ) : (
-          <ul>
+          <ul className="task-list">
             {todayTasks.map(task => (
-              <li key={task.id}>
-                <div>
-                  <div>
-                    <input
-                      type="checkbox"
-                      checked={task.completed}
-                      onChange={() => handleToggleTask(task.id, task.completed)}
-                      disabled={loading}
-                    />
-                    <span className={task.completed ? 'completed' : ''}>
-                      {task.text}
-                    </span>
-                    <button
-                      onClick={() => handleDeleteTask(task.id)}
-                      disabled={loading}
-                      title="Удалить задачу"
-                    >
-                      🗑️
-                    </button>
-                  </div>
-                  
-                  {task.createdAt && (
-                    <div>
-                      <span>
-                        📅 {new Date(task.createdAt).toLocaleDateString('ru-RU')}
-                      </span>
-                    </div>
-                  )}
+              <li key={task.id} className={`task-item ${task.completed ? 'completed' : ''}`}>
+                <div className="task-content">
+                  <input
+                    type="checkbox"
+                    className="task-checkbox"
+                    checked={task.completed}
+                    onChange={() => handleToggleTask(task.id, task.completed)}
+                    disabled={loading}
+                  />
+                  <span className={`task-text ${task.completed ? 'completed' : ''}`}>
+                    {task.text}
+                  </span>
+                  <button
+                    className="delete-button"
+                    onClick={() => handleDeleteTask(task.id)}
+                    disabled={loading}
+                    title="Удалить задачу"
+                  >
+                    🗑️
+                  </button>
                 </div>
+
+                {task.createdAt && (
+                  <div className="task-date">
+                    📅 {new Date(task.createdAt).toLocaleDateString('ru-RU')}
+                  </div>
+                )}
               </li>
             ))}
           </ul>

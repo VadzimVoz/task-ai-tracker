@@ -5,19 +5,20 @@ import TaskForm from './TaskForm';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { useTaskStore } from '../store/taskStore';
+import '../styles/reminders.css';
 
 export default function Reminders() {
-  const { 
-    tasks, 
-    loading, 
-    error, 
-    fetchTasks, 
-    addTask, 
-    updateTask, 
-    deleteTask, 
-    clearError 
+  const {
+    tasks,
+    loading,
+    error,
+    fetchTasks,
+    addTask,
+    updateTask,
+    deleteTask,
+    clearError
   } = useTaskStore();
-  
+
   const [dueDate, setDueDate] = useState<Date | null>(new Date());
 
   useEffect(() => {
@@ -29,7 +30,7 @@ export default function Reminders() {
       clearError();
       return;
     }
-    
+
     try {
       await addTask({
         text,
@@ -61,31 +62,27 @@ export default function Reminders() {
 
   const reminders = tasks.filter(task => task.type === 'reminder');
 
-  if (loading && tasks.length === 0) {
-    return (
-      <div>
-        <h2>Напоминания</h2>
-        <div>Загрузка напоминаний...</div>
-      </div>
-    );
-  }
-
   return (
     <div>
-      <h2>Напоминания</h2>
-      
+      <h2 className="reminder-title">Напоминания</h2>
+
+      {loading && tasks.length === 0 && (
+        <div className="reminder-description">Загрузка напоминаний...</div>
+      )}
+
       {error && (
-        <div>
+        <div className="reminder-description">
           <span>{error}</span>
           <button onClick={clearError} title="Закрыть">
             ×
           </button>
         </div>
       )}
-      
-      <div>
-        <label>Дата и время напоминания:</label>
+
+      <div className="reminder-description">
+        <label htmlFor="datepicker">Дата и время напоминания:</label>
         <DatePicker
+          id="datepicker"
           selected={dueDate}
           onChange={setDueDate}
           showTimeSelect
@@ -97,33 +94,35 @@ export default function Reminders() {
         />
       </div>
 
-      <TaskForm 
-        onSubmit={handleAddReminder} 
-        placeholder="Текст напоминания..."
-        disabled={loading}
-      />
-      
+      <div className="reminder-description">
+        <TaskForm
+          onSubmit={handleAddReminder}
+          placeholder="Текст напоминания..."
+          disabled={loading}
+        />
+      </div>
+
       <div>
-        <h3>Мои напоминания:</h3>
-        
+        <h3 className="reminder-title">Мои напоминания:</h3>
+
         {reminders.length === 0 ? (
-          <div>
+          <div className="reminder-description">
             <p>⏰ Нет напоминаний</p>
             <p>Добавьте первое напоминание выше</p>
           </div>
         ) : (
-          <ul>
+          <ul className="reminder-list">
             {reminders.map(reminder => (
-              <li key={reminder.id}>
-                <div>
-                  <div>
+              <li key={reminder.id} className="reminder-item">
+                <div className="reminder-meta">
+                  <div className="reminder-content">
                     <input
                       type="checkbox"
                       checked={reminder.completed}
                       onChange={() => handleToggleReminder(reminder.id, reminder.completed)}
                       disabled={loading}
                     />
-                    <span className={reminder.completed ? 'completed' : ''}>
+                    <span className={`reminder-description ${reminder.completed ? 'completed' : ''}`}>
                       {reminder.text}
                     </span>
                     <button
@@ -134,18 +133,22 @@ export default function Reminders() {
                       🗑️
                     </button>
                   </div>
-                  
-                  <div>
-                    <span>
-                      📅 {reminder.dueDate ? new Date(reminder.dueDate).toLocaleDateString('ru-RU') : 'Нет даты'}
-                    </span>
-                    <span>
-                      ⏰ {reminder.dueDate ? new Date(reminder.dueDate).toLocaleTimeString('ru-RU', {
-                        hour: '2-digit',
-                        minute: '2-digit'
-                      }) : 'Нет времени'}
-                    </span>
-                  </div>
+                </div>
+
+                <div className="reminder-meta">
+                  <span className="reminder-date">
+                    📅 {reminder.dueDate
+                      ? new Date(reminder.dueDate).toLocaleDateString('ru-RU')
+                      : 'Нет даты'}
+                  </span>
+                  <span className="reminder-date">
+                    ⏰ {reminder.dueDate
+                      ? new Date(reminder.dueDate).toLocaleTimeString('ru-RU', {
+                          hour: '2-digit',
+                          minute: '2-digit'
+                        })
+                      : 'Нет времени'}
+                  </span>
                 </div>
               </li>
             ))}
